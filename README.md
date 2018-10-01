@@ -74,6 +74,8 @@ You can set a threshold for changes in the stock data and only notify you of the
 
 ### 4. Deploy Cloud Functions
 
+**Choose one of the two deployment methods:**
+
 ## Deploy using the `wskdeploy` command line tool
 
 This approach deploy the Cloud Functions with one command driven by the runtime-specific manifest file available in this repository.
@@ -86,6 +88,10 @@ $ wskdeploy
 ```
 
 > You may want to undeploy them later with `wskdeploy undeploy`
+
+## Deploy manually with the `ibmcloud wsk` command line tool
+
+Go to [Alternative Deployment Methods](#alternative-deployment-methods) section
 
 ### 5. Launch Application
 
@@ -106,7 +112,7 @@ $ npm start
 
 * _(or) Double-click `web/index.html`_
 
-Add the stocks you want to follow in the webpage. This stores it in Cloudant.
+Add the stocks' tickers you want to follow in the webpage. This stores it in Cloudant.
 
 In the `local.env` file, the CRON parameter is set to "16 0 * * *" ([crontab](http://crontab.org) format). It is set to trigger daily at 0:16 UTC (20:16 EDT). You can change this later and do Step 4 again.
 
@@ -120,65 +126,91 @@ This should trigger your actions and receive data from the Stocks you followed.
 
 # Sample output
 
+![screenshot-1](docs/app-screen-1.png)
+![screenshot-2](docs/app-screen-2.png)
+
 # Alternative Deployment Methods
 
 ### Deploy manually with the `ibmcloud wsk` command line tool
 
-<!-- This approach shows you how to deploy individual the packages, actions, triggers, and rules with CLI commands. It helps you understand and control the underlying deployment artifacts.
+This approach shows you how to deploy individual actions, triggers, and rules with CLI commands. It helps you understand and control the underlying deployment artifacts.
 
 * Export credentials
 ```
 $ source local.env
 ```
 
-* Create Cloudant Binding
+* Create the Alarm Trigger with Cron
+
+The trigger will be fired on a time-based schedule
 
 ```
-$ ibmcloud wsk package bind /whisk.system/cloudant serverless-pattern-cloudant-package \
--p username $CLOUDANT_USERNAME \
--p password $CLOUDANT_PASSWORD \
--p host ${CLOUDANT_USERNAME}.cloudant.com
+$ ibmcloud wsk trigger create cron-trigger --feed /whisk.system/alarms/alarm \
+--param cron $CRON
 ```
 
-* Create the Cloudant Trigger
+* Create the Actions
 
-The trigger will listen to changes in the `images` database.
-
-```
-$ ibmcloud wsk trigger create update-trigger --feed serverless-pattern-cloudant-package/changes \
---param dbname images
-```
-
-* Create the Action
-
-The action executes your code. The code is already configured to use the Watson SDK.
+Create a package to organize the actions that will be created for this repo.
 
 ```
-$ ibmcloud wsk action create update-document-with-watson actions/updateDocumentWithWatson.js \
+$ ibmcloud wsk package create data-at-rest-processing
+```
+
+The action executes your code. The code is in the `actions` folder
+
+Action that gets the stock data from an external API:
+```
+$ ibmcloud wsk action create data-at-rest-processing/get-stocks-data actions/get-stocks-data.js \
 --kind nodejs:8 \
 --param USERNAME $CLOUDANT_USERNAME \
+--param PASSWORD $CLOUDANT_PASSWORD
+```
+
+Action that feeds news to Watson Natural Language Understanding and gets sentiments and emotions.
+
+```
+$ ibmcloud wsk action data-at-rest-processing/send-to-nlu actions/send-to-nlu.js \
+-- kind nodejs:8 \
+--param USERNAME $CLOUDANT_USERNAME \
 --param PASSWORD $CLOUDANT_PASSWORD \
---param DBNAME $CLOUDANT_IMAGE_DATABASE \
---param DBNAME_PROCESSED $CLOUDANT_TAGS_DATABASE \
---param WATSON_VR_APIKEY $WATSON_VISUAL_APIKEY
+--param NLU_USERNAME $NLU_USERNAME \
+--param NLU_PASSWORD $NLU_PASSWORD
+```
+
+Action that sends an SMS via Twilio and/or a Slack mesage via webhook.
+
+```
+$ ibmcloud wsk action data-at-rest-processing/send-to-nlu actions/send-to-nlu.js \
+-- kind nodejs:8 \
+--param TWILIO_SID $TWILIO_SID \
+--param TWILIO_AUTH $TWILIO_AUTH \
+--param TWILIO_NUMBER $TWILIO_NUMBER \
+--param NUMBER_OF_RECEIVER $NUMBER_OF_RECEIVER \
+--param SLACK_WEBHOOK $SLACK_WEBHOOK \
+--param THRESHOLD $THRESHOLD \
 ```
 
 * Create the Rule
 
-The rule will connect invoke the action when the trigger receives an event.
+The rule will connect the action when the trigger is fired.
 
 ```
-$ ibmcloud wsk rule create update-trigger-rule update-trigger update-document-with-watson
+$ ibmcloud wsk rule create cron-trigger-rule cron-trigger data-at-rest-processing/get-stocks-data
 ```
 
-* To delete them
+You can now proceed to [Launching your application](#5-launch-application).
+
+* To delete them later:
 
 ```
-$ ibmcloud wsk package delete serverless-pattern-cloudant-package
-$ ibmcloud wsk trigger delete update-trigger
-$ ibmcloud wsk action delete update-document-with-watson
-$ ibmcloud wsk rule delete update-trigger-rule
-``` -->
+$ ibmcloud wsk trigger delete cron-trigger
+$ ibmcloud wsk rule delete cron-trigger-rule
+$ ibmcloud wsk action delete data-at-rest-processing/get-stock-data
+$ ibmcloud wsk action delete data-at-rest-processing/send-to-nlu
+$ ibmcloud wsk action delete data-at-rest-processing/notify
+$ ibmcloud wsk package delete data-at-rest-processing
+```
 
 # Links
 
