@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="stylesheets/page.css">
+  <link rel="stylesheet" href="stylesheets/stocks.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-red.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+
+<body>
+  <!-- Header -->
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span class="mdl-layout-title" id="titleModelName"></span>
+    </div>
+  </header>
+
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Dev</span>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link" href="index.html">Home</a>
+    </nav>
+  </div>
+  <main class="mdl-layout__content">
+    <div class="page-content"><br/>
+      <!-- chart -->
+      <div class="stock-data">
+        <h3 id="companyName"></h3>
+        <h6 id="companySector" class="mdl-card__subtitle-text"></h6>
+        <div id="companyDescription" class="mdl-card__supporting-text"></div>
+        <div id="chart_div" style="width: 1200px; height: 350px;"></div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-chart">
+        <h3>News Summary</h3>
+        <div id="emotion_chart" style="width: 75vw; height: 500px;"></div>
+      </div>
+
+      <!-- News -->
+      <div class="news-cards-section">
+        <h3>News</h3>
+
+        <div id="newsCards" class="news-cards">
+        </div>
+
+
+      </div>
+
+    </div>
+  </main>
+  </div>
+</body>
+</html>
+<!-- <script>
+  window.nodeRequire = require;
+  delete window.require;
+  delete window.exports;
+  delete window.module;
+</script> -->
+<script src="scripts/cloudantClient.js"></script>
+<script src="scripts/stockView.js"></script>

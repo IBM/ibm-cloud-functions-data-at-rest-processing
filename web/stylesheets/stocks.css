@@ -1,0 +1,19 @@
+/* .news-cards-section {
+  background: #000;
+} */
+
+.news-cards {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.news-card {
+  margin-right: 25px;
+  margin-bottom: 25px;
+}
+
+.news-title {
+  color: #000000;
+}

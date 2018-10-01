@@ -1,0 +1,64 @@
+# Manifest for ibm-cloud-functions-data-at-rest-processing
+# Repo is located at https://github.com/IBM/ibm-cloud-functions-data-at-rest-processing
+# Installing openwhisk actions, triggers, and rules.
+
+# Deployment using this manifest file creates following OpenWhisk components:
+#   Package:    data-at-rest-processing
+#   Action:     get-stocks-data, notify, send-to-nlu
+#   Trigger:    cron-trigger
+#   Rule:       cron-trigger-rule
+
+# This manifest file expects following env. variables:
+#   CLOUDANT_USERNAME
+#   CLOUDANT_PASSWORD
+#   NLU_USERNAME
+#   NLU_PASSWORD
+#   (Optional: for notification action with Twilio or Slack)
+#   TWILIO_SID
+#   TWILIO_AUTH
+#   TWILIO_NUMBER
+#   NUMBER_OF_RECEIVER
+#   SLACK_WEBHOOK
+#   THRESHOLD
+---
+packages:
+  data-at-rest-processing:
+    actions:
+      # Action named "get-stocks-data, send-to-nlu, notify"
+      # Creating actions as a regular Node.js action
+      get-stocks-data:
+        function: actions/get-stocks-data.js
+        runtime: nodejs:8
+        inputs:
+          USERNAME: $CLOUDANT_USERNAME
+          PASSWORD: $CLOUDANT_PASSWORD
+      send-to-nlu:
+        function: actions/send-to-nlu.js
+        runtime: nodejs:8
+        inputs:
+          USERNAME: $CLOUDANT_USERNAME
+          PASSWORD: $CLOUDANT_PASSWORD
+          NLU_USERNAME: $NLU_USERNAME
+          NLU_PASSWORD: $NLU_PASSWORD
+      notify:
+        function: actions/notify.js
+        runtime: nodejs:8
+        inputs:
+          TWILIO_SID: $TWILIO_SID
+          TWILIO_AUTH: $TWILIO_AUTH
+          TWILIO_NUMBER: $TWILIO_NUMBER
+          NUMBER_OF_RECEIVER: $NUMBER_OF_RECEIVER
+          SLACK_WEBHOOK: $SLACK_WEBHOOK
+          THRESHOLD: $THRESHOLD
+    triggers:
+      # Creating the cron-trigger trigger"
+      cron-trigger:
+        feed: /whisk.system/alarms/alarm
+        inputs:
+          cron: $CRON
+    rules:
+      # Rule named "cron-trigger-rule"
+      # Creating the rule that links the trigger to the sequence
+      cron-trigger-rule:
+        trigger: cron-trigger
+        action: get-stocks-data
