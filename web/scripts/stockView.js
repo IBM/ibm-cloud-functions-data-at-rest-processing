@@ -23,7 +23,7 @@ getDataAndNews(ticker, function (data) {
   }))
 });
 
-google.charts.load('current', {'packages':['corechart','scatter']});
+google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
 getCompanyData(ticker, function(data) {
@@ -105,12 +105,19 @@ function drawChart() {
       var emotion = data.doc.emotion.document.emotion
       return [{v:index,f:data.doc.retrieved_url},emotion.sadness,emotion.joy,emotion.fear,emotion.disgust,emotion.anger]
     })
+    console.log(emotions)
     if (emotions.length > 0) {
       emotions.unshift(['News','Sadness','Joy','Fear','Disgust','Anger'])
       var emotionsData = google.visualization.arrayToDataTable(emotions)
       let scatterOptions = {
         hAxis: {
-          gridlines: {color: '#fff',count:emotions.length - 1}
+          title: 'News #',
+          format: '0',
+          gridlines: {color: '#fff'},
+          viewWindow: {
+            min: 0,
+            max: emotions.length - 2
+          }
         },
         lineWidth: 1,
         vAxis: {title: 'Score'}

@@ -1,4 +1,4 @@
-# Serverless Data at rest processing with Stock Market data
+# Run Serverless Functions on data at rest with Stock Market data
 
 The application demonstrates an IBM Cloud Functions (based on Apache OpenWhisk) that does Cron Jobs with data at rest in a Cloudant database. The use case demonstrates how actions work with data services and execute logic at specific times in the Cron job configuration.
 
