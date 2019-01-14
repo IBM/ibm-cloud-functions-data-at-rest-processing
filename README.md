@@ -60,7 +60,7 @@ Create a [**Cloudant**](https://console.bluemix.net/catalog/services/cloudant) i
 * Launch the Cloudant web console and create a database named `stocks`. You may also want to enable CORS this time for development.
 
 Create a [Watson Natural Language Understanding](https://console.bluemix.net/catalog/services/natural-language-understanding) instance.
-* Copy the username and password in the Credentials section and paste it in the `local.env` file in the value of `NLU_USERNAME` and `NLU_PASSWORD`.
+* Copy the username and password in the Credentials section and paste it in the `local.env` file in the value of `NLU_USERNAME` and `NLU_PASSWORD`. If you have an API key instead of the username and password, fill in the value of `NLU_IAM_APIKEY` instead.
 
 ### 3. Configure External Services for Notifications
 

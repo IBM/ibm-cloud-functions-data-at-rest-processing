@@ -16,11 +16,18 @@ var cloudant;
 
 function main(params) {
     cloudant = Cloudant({account:params.USERNAME, password:params.PASSWORD});
-    nlu = new NLU({
-        username: params.NLU_USERNAME,
-        password: params.NLU_PASSWORD,
-        version: '2018-03-16'
-    })
+    if (params.USERNAME && params.NLU_PASSWORD) {
+        nlu = new NLU({
+            username: params.NLU_USERNAME,
+            password: params.NLU_PASSWORD,
+            version: '2018-03-16'
+        })
+    } else if (params.NLU_IAM_APIKEY) {
+        nlu = new NLU({
+            iam_apikey: params.NLU_IAM_APIKEY,
+            version: '2018-03-16'
+        })
+    }
 
     var urlArray = [];
     var stocks = Object.keys(params.data)
