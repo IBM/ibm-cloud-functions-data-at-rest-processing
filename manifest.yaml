@@ -13,6 +13,7 @@
 #   CLOUDANT_PASSWORD
 #   NLU_USERNAME
 #   NLU_PASSWORD
+#   NLU_IAM_APIKEY
 #   (Optional: for notification action with Twilio or Slack)
 #   TWILIO_SID
 #   TWILIO_AUTH
@@ -40,6 +41,7 @@ packages:
           PASSWORD: $CLOUDANT_PASSWORD
           NLU_USERNAME: $NLU_USERNAME
           NLU_PASSWORD: $NLU_PASSWORD
+          NLU_IAM_APIKEY: $NLU_IAM_APIKEY
       notify:
         function: actions/notify.js
         runtime: nodejs:8
