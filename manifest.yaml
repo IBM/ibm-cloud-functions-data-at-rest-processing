@@ -1,5 +1,6 @@
 # Manifest for ibm-cloud-functions-data-at-rest-processing
-# Repo is located at https://github.com/IBM/ibm-cloud-functions-data-at-rest-processing
+# Repo is located at
+# https://github.com/IBM/ibm-cloud-functions-data-at-rest-processing
 # Installing openwhisk actions, triggers, and rules.
 
 # Deployment using this manifest file creates following OpenWhisk components:
