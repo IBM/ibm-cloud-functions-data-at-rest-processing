@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/IBM/ibm-cloud-functions-data-at-rest-processing.svg?branch=master)](https://travis-ci.com/IBM/ibm-cloud-functions-data-at-rest-processing)
+
 # Run Serverless Functions on data at rest with Stock Market data
 
 The application demonstrates an IBM Cloud Functions (based on Apache OpenWhisk) that does Cron Jobs with data at rest in a Cloudant database. The use case demonstrates how actions work with data services and execute logic at specific times in the Cron job configuration.
