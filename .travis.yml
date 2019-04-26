@@ -12,4 +12,6 @@ before_script:
 
 jobs:
   include:
-    - script: echo "Lints passed."
+    - script:
+        - "./pattern-ci/scripts/install-openwhisk-docker.sh"
+        - "./tests/deploy.sh"
